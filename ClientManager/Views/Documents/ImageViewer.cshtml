@@ -1,0 +1,87 @@
+﻿@model IEnumerable<DBOperation.Document>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <title>jQuery imagebox Plugin Demo</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/plugins/image-box/css/style.css" rel="stylesheet" />
+    <!-- jQuery -->
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="~/Content/plugins/image-box/js/jquery.imagebox.js"></script>
+    <style>
+        .modal-dialog {
+            z-index: 1000000 !important;
+        }
+    </style>
+</head>
+<body class="main">
+    <div class="container">
+        <!--<section class="content">
+        <div class="container-fluid">
+            <div class="row">-->
+        <!-- left column -->
+        <!--<div class="col-md-12">-->
+        <!-- jquery validation -->
+        <!--<div class="card card-primary">
+        <div class="card-header">-->
+        <h3 class="card-title">Document Viewer</h3>
+        @*</div>*@
+
+        @if (Model.Count() > 0)
+        {
+            foreach (var doc in Model.Where(wh => wh.DocumentType == "Image"))
+            {
+                if (doc.DocumentType == "Image")
+                {
+                    <img class="img img-test" data-url="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" src="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" alt="@doc.FileName" style="width:200px; height:200px" />
+                }
+
+            }
+            foreach (var doc in Model.Where(wh => wh.DocumentType == "PDF"))
+            {
+                if (doc.DocumentType == "PDF")
+                {
+                    var filedata = "data:application/pdf;base64," + doc.FileData;
+                    <iframe src=@filedata
+                            style="width:600px; height:500px;" frameborder="0"></iframe>
+                    @*<img class="img img-test" data-url="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" src="data:image/@doc.FileExtension.Replace(".", "").ToLower();base64,@doc.FileData" alt="@doc.FileName" style="width:200px; height:200px" />*@
+                }
+
+            }
+            foreach (var doc in Model.Where(wh => wh.DocumentType != "Image" && wh.DocumentType != "PDF"))
+            {
+                var filedata = "data:application/octet-stream;base64," + doc.FileData;
+                <br /> <a href="@filedata" download="@doc.FileName">@doc.FileName</a>
+            }
+
+        }
+        else
+        {
+            <p>No Attachments!</p>
+        }
+        @*</div>
+                        </div>
+                    </div>
+                </div>
+            </section>*@
+    </div><!--/.container - fluid-->
+
+    <script type="text/javascript">
+        $(".main").imageBox();
+    </script>
+</body>
+</html>

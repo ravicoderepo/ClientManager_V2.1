@@ -1,0 +1,295 @@
+﻿@model ClientManager.Models.Dashboard
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Dashboard";
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="~/Content/dist/js/pages/dashboard.js"></script>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Finance Dashboard</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">Finance Dashboard</li>
+                    </ol>
+                </div><!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+    <!-- Main content Monthly Summary-->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <h4 class="m-0">Summary of @Model.CurrentMonthAndYear</h4>
+                </div><!-- /.col -->
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-blue">
+                        <div class="inner">
+                            <h3>&#8377;@Model.MonthlyTotalPettyCash.ToString("#,##0.00")</h3>
+
+                            <p>Total Petty Cash</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="/PettyCashes/List" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-4 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>&#8377;@Model.MonthlyAvailablePettyCash.ToString("#,##0.00") </h3>
+
+                            <p>Available Petty Cash</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-4 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>&#8377;@Model.MonthlyPendingPettyCash.ToString("#,##0.00") </h3>
+
+                            <p>Pending Petty Cash</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>&#8377;@Model.MonthlyUnApprovedExpenses.ToString("#,##0.00")</h3>
+
+                            <p>Expense To Approve</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-fuchsia">
+                        <div class="inner">
+                            <h3>&#8377;@Model.MonthlyUnVerifiedExpenses.ToString("#,##0.00")</h3>
+
+                            <p>Expense To Verify</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Approved')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <!--<div class="row">
+            <div class="col-lg-4 col-12">
+                 small box
+                <div class="small-box bg-gradient-teal">
+                    <div class="inner">
+                        <h3>&#8377;@Model.MonthlyVerifiedExpenses.ToString("#,##0.00")</h3>
+
+                        <p>Verified Expense</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                </div>
+            </div>-->
+            <!-- ./col -->
+            <!--</div>-->
+
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <h4 class="m-0">Total Summary</h4>
+                </div><!-- /.col -->
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-blue">
+                        <div class="inner">
+                            <h3>&#8377;@Model.TotalPettyCash.ToString("#,##0.00")</h3>
+
+                            <p>Total Petty Cash</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="/PettyCashes/List" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-4 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                        <div class="inner">
+                            <h3>&#8377;@Model.AvailablePettyCash.ToString("#,##0.00")</h3>
+
+                            <p>Available Petty Cash</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-4 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>&#8377;@Model.PendingPettyCash.ToString("#,##0.00")</h3>
+
+                            <p>Pending Petty Cash</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-bag"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div><!-- ./col -->
+         
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                        <div class="inner">
+                            <h3>&#8377;@Model.UnApprovedExpenses.ToString("#,##0.00")</h3>
+
+                            <p>
+                                Expense To Approve
+                            </p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Pending')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-6 col-12">
+                    <!-- small box -->
+                    <div class="small-box bg-fuchsia">
+                        <div class="inner">
+                            <h3>&#8377;@Model.UnVerifiedExpenses.ToString("#,##0.00")</h3>
+                            <p>
+                                Expense To Verify
+                            </p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a href="javascript:fnSearch('Approved')" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <div class="row">
+                <!--<div class="col-lg-4 col-12">-->
+                <!-- small box -->
+                <!--<div class="small-box bg-gradient-teal">
+                        <div class="inner">
+                            <h3>&#8377;@Model.VerifiedExpenses.ToString("#,##0.00")</h3>
+
+                            <p>Verified Expense</p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a href="#"  class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>-->
+                <!-- ./col -->
+
+            </div>
+            <!-- /.row -->
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="col-lg-12 connectedSortable">
+                    <!-- Custom tabs (Charts with tabs)-->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-pie mr-1"></i>
+                                Expense Tracker
+                            </h3>
+                            <div class="card-tools">
+                                <ul class="nav nav-pills ml-auto">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Bar</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div><!-- /.card-header -->
+                        <div class="card-body">
+                            <div class="tab-content p-0">
+                                <!-- Morris chart - Sales -->
+                                <div class="chart tab-pane active" id="revenue-chart"
+                                     style="position: relative; height: 300px;">
+                                    <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
+                                </div>
+                                <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
+                                    <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
+                                </div>
+                            </div>
+                        </div><!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+
+                </section>
+                <!-- /.Left col -->
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+</div>
+<script>
+    function fnSearch(status) {
+        debugger;
+        window.location.href = "/ExpenseTrackers/List?" + "dashboardFilter=" + status;
+    }
+    $("#mnuFinanceDashboard").addClass("active");
+    debugger;
+</script>

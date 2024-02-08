@@ -1,0 +1,294 @@
+﻿@model IEnumerable<DBOperation.SaleActivity>
+
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+    string[] superroles = { "Super User", "Sales Engineer", "Sales Manager" };
+}
+
+<style>
+    table tr td:first-child {
+        white-space: nowrap;
+    }
+
+    table thead tr th {
+        white-space: nowrap;
+    }
+
+    table thead tr td {
+        white-space: nowrap !important;
+        font-size: 8px !important;
+    }
+
+    table.table-bordered.dataTable th, table.table-bordered.dataTable td {
+        white-space: nowrap !important;
+    }
+
+    body {
+        font-size: 13px !important;
+    }
+
+    .dataTables_filter {
+        display: none !important;
+    }
+</style>
+
+<table id="example1" class="table table-bordered table-striped" data-page-length='50'>
+    <thead>
+        <tr>
+            <th>Action</th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.SaleDate)*@
+                Call Date
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.RecentCallDate)*@
+                Recent Call Date
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.SalesStatu.Status)*@
+                Status
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ClientName)*@
+                Customer Name
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Product.ProductName)*@
+                Product Name
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Capacity)*@
+                Capacity
+            </th>
+
+
+            <th>
+                Invoice No.
+            </th>
+            <th>
+                Invoice Amount
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.NoOfFollowUps)*@
+                No. Of Follow-Up
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.ClientEmail)
+                Customer Email
+            </th>
+            @*<th>
+                    @Html.DisplayNameFor(model => model.ClientPhoneNo)
+                    Customer Phone No.
+                </th>*@
+            @*<th>
+                    @Html.DisplayNameFor(model => model.Unit)
+                    Unit
+                </th>*@
+
+            <th>
+                @*@Html.DisplayNameFor(model => model.AnticipatedClosingDate)*@
+                Follow-up Call Date
+            </th>
+
+            <th>
+                Closing Date
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Remarks)*@
+                Remarks
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.CreatedOn)*@
+                Created On
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.CreatedBy)*@
+                Created By
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ModifiedOn)*@
+                Modified On
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ModifiedBy)*@
+                Modified By
+            </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (currentUser.UserRoles.Any(wh => superroles.Contains(wh.RoleName)) && item.Status != 6)
+                    {
+                        <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-success btn-xs" title="View" onclick="javascript:location.href='/SaleActivities/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
+                    }
+
+                    @if (item.CreatedBy == currentUser.Id && item.Status != 6)
+                    {
+                        <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnSubmitSaleDetails(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                    }
+                </td>
+                <td>
+                    @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.SaleDate))*@
+                    @Convert.ToDateTime(item.SaleDate)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.RecentCallDate.ToShortDateString())*@
+                    @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.RecentCallDate))*@
+                    @Convert.ToDateTime(item.RecentCallDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SalesStatu.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientName)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capacity) @Html.DisplayFor(modelItem => item.Unit)
+                </td>
+                <td>@item.InvoiceNo</td>
+
+                <td style="text-align:right">
+                    @item.InvoiceAmount.Value.ToString("#,##,##0.00")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoOfFollowUps)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClientEmail)
+                </td>
+                @*<td>
+            @Html.DisplayFor(modelItem => item.ClientPhoneNo)
+        </td>*@
+                @*<td>
+            @Html.DisplayFor(modelItem => item.Unit)
+        </td>*@
+
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.AnticipatedClosingDate.Value.ToShortDateString())*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.AnticipatedClosingDate))
+                </td>
+                <td>
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.DateOfClosing))
+                </td>
+                <td>
+                    @Html.Raw(item.Remarks)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User2.FullName)
+                </td>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.ModifiedOn.Value.ToShortDateString())*@
+                    @Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User2.FullName)
+                </td>
+            </tr>
+        }
+    </tbody>
+    @*<tfoot>
+            <tr>
+                <th>Rendering engine</th>
+                <th>Browser</th>
+                <th>Platform(s)</th>
+                <th>Engine version</th>
+                <th>CSS grade</th>
+            </tr>
+        </tfoot>*@
+</table>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script src="http://cdn.datatables.net/plug-ins/1.10.25/sorting/datetime-moment.js"></script>
+<script>
+    $(function () {
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false, "lengthChange": true,
+            "order": [[2, 'desc']],
+            "columnDefs": [{ "type": "date", "targets": [1,2] }],
+            "buttons": ["excel", "pdf", "print", "colvis"]
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+
+    });
+    $(document).ready(function () {
+        $.fn.dataTable.moment('DD/MM/YYYY');
+
+        $('#example1').DataTable();
+    });
+    //$(document).ready(function () {
+    //    $.fn.dataTable.moment('HH:mm MMM D, YY');
+    //    $.fn.dataTable.moment('dd,MMM,YYYY');
+
+    //    $('#example1').DataTable();
+    //});
+    //$.fn.dataTable.ext.type.detect.unshift(function (d) {
+    //    return moment(d, format, locale, true).isValid() ?
+    //        'moment-' + format :
+    //        null;
+    //});
+    //jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+    //    "date-uk-pre": function (a) {
+    //        var ukDatea = a.split('/');
+    //        return (ukDatea[2] + ukDatea[1] + ukDatea[0]) * 1;
+    //    },
+
+    //    "date-uk-asc": function (a, b) {
+    //        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    //    },
+
+    //    "date-uk-desc": function (a, b) {
+    //        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    //    }
+    //});
+
+
+    function fnSubmitSaleDetails(id) {
+
+        if (confirm("do you wish to delete this record?") == true) {
+
+            $.ajax({
+                type: "POST",
+                url: "/SaleActivities/Delete/" + id,
+                /*data: JSON.stringify(SaleData),*/
+                //dataType: "json",
+                //contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        window.location.href = data.redirectURL;
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
+                }
+            });
+        }
+    }
+    if ($('#ddlSalesPerson option:selected').val() == '-1') {
+         $('#lblSalesPersonName').html(' of all users - ' + ' <span style="font-weight:bold; color:green; font-size:20px !important">' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
+
+    }
+    else {
+         $('#lblSalesPersonName').html(' of - ' + ' <span style="font-weight:bold; color:green; font-size:20px !important">' + $('#ddlSalesPerson option:selected').text() + ' : ' + '@ViewBag.TotalSalesBySalesPerson' + '</span>');
+    }
+</script>

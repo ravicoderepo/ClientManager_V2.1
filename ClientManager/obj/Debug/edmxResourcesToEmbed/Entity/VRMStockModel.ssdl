@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VRMStackMaintenanceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="VRM_Attachment">
+    <Key>
+      <PropertyRef Name="AttachmentId" />
+    </Key>
+    <Property Name="AttachmentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OutwardId" Type="int" Nullable="false" />
+    <Property Name="FileName" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="FileContentType" Type="nvarchar" MaxLength="500" />
+    <Property Name="FileContent" Type="varbinary(max)" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_ErrorLog">
+    <Key>
+      <PropertyRef Name="ErrorLogId" />
+    </Key>
+    <Property Name="ErrorLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Subject" Type="varchar(max)" Nullable="false" />
+    <Property Name="Description" Type="varchar(max)" Nullable="false" />
+    <Property Name="IPAddress" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_InwardStock">
+    <Key>
+      <PropertyRef Name="StockId" />
+    </Key>
+    <Property Name="StockId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MaterialId" Type="int" Nullable="false" />
+    <Property Name="TypeId" Type="int" Nullable="false" />
+    <Property Name="ItemId" Type="int" Nullable="false" />
+    <Property Name="AvailableQuantity" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_InwardStockTransaction">
+    <Key>
+      <PropertyRef Name="InwardStockTransactionId" />
+    </Key>
+    <Property Name="InwardStockTransactionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="StockId" Type="int" Nullable="false" />
+    <Property Name="AddQuantity" Type="int" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="PONumber" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="ReceivedFrom" Type="int" Nullable="false" />
+    <Property Name="ReceivedBy" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="ReceivedDate" Type="datetime" Nullable="false" />
+    <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="GRNnumber" Type="nvarchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="VRM_Master_Company">
+    <Key>
+      <PropertyRef Name="CompanyId" />
+    </Key>
+    <Property Name="CompanyId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_Master_Item">
+    <Key>
+      <PropertyRef Name="ItemId" />
+    </Key>
+    <Property Name="ItemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MaterialId" Type="int" Nullable="false" />
+    <Property Name="TypeId" Type="int" Nullable="false" />
+    <Property Name="ItemName" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="MinimumAvailableQuantity" Type="int" />
+  </EntityType>
+  <EntityType Name="VRM_Master_Material">
+    <Key>
+      <PropertyRef Name="MaterialId" />
+    </Key>
+    <Property Name="MaterialId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MaterialName" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_Master_Type">
+    <Key>
+      <PropertyRef Name="TypeId" />
+    </Key>
+    <Property Name="TypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MaterialId" Type="int" Nullable="false" />
+    <Property Name="TypeName" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_OutwardStock">
+    <Key>
+      <PropertyRef Name="OutwardId" />
+    </Key>
+    <Property Name="OutwardId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InvoiceNumber" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="OutwardDate" Type="datetime" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="CustomerInformation" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="VRM_OutwardStockTransaction">
+    <Key>
+      <PropertyRef Name="OutwardStackDetailId" />
+    </Key>
+    <Property Name="OutwardStackDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OutwardId" Type="int" Nullable="false" />
+    <Property Name="StockId" Type="int" Nullable="false" />
+    <Property Name="OutwardQuantity" Type="int" Nullable="false" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_Role">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_UserDetail">
+    <Key>
+      <PropertyRef Name="UserDetailId" />
+    </Key>
+    <Property Name="UserDetailId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="500" />
+    <Property Name="Email" Type="nvarchar" MaxLength="500" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Role" Type="int" Nullable="false" />
+    <Property Name="IsActive" Type="bit" Nullable="false" />
+    <Property Name="ProfileImage" Type="nvarchar(max)" />
+  </EntityType>
+  <Association Name="FK_Master_Type_Master_Type">
+    <End Role="VRM_Master_Type" Type="Self.VRM_Master_Type" Multiplicity="1" />
+    <End Role="VRM_Master_Type1" Type="Self.VRM_Master_Type" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="VRM_Master_Type">
+        <PropertyRef Name="TypeId" />
+      </Principal>
+      <Dependent Role="VRM_Master_Type1">
+        <PropertyRef Name="TypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VRMStackMaintenanceModelStoreContainer">
+    <EntitySet Name="VRM_Attachment" EntityType="Self.VRM_Attachment" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_ErrorLog" EntityType="Self.VRM_ErrorLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_InwardStock" EntityType="Self.VRM_InwardStock" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_InwardStockTransaction" EntityType="Self.VRM_InwardStockTransaction" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_Master_Company" EntityType="Self.VRM_Master_Company" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_Master_Item" EntityType="Self.VRM_Master_Item" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_Master_Material" EntityType="Self.VRM_Master_Material" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_Master_Type" EntityType="Self.VRM_Master_Type" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_OutwardStock" EntityType="Self.VRM_OutwardStock" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_OutwardStockTransaction" EntityType="Self.VRM_OutwardStockTransaction" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_Role" EntityType="Self.VRM_Role" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="VRM_UserDetail" EntityType="Self.VRM_UserDetail" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Master_Type_Master_Type" Association="Self.FK_Master_Type_Master_Type">
+      <End Role="VRM_Master_Type" EntitySet="VRM_Master_Type" />
+      <End Role="VRM_Master_Type1" EntitySet="VRM_Master_Type" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

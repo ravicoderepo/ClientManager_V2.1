@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="VRMStackMaintenanceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="VRM_Attachment">
+    <Key>
+      <PropertyRef Name="AttachmentId" />
+    </Key>
+    <Property Name="AttachmentId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OutwardId" Type="Int32" Nullable="false" />
+    <Property Name="FileName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="FileContentType" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="FileContent" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_ErrorLog">
+    <Key>
+      <PropertyRef Name="ErrorLogId" />
+    </Key>
+    <Property Name="ErrorLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="IPAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_InwardStock">
+    <Key>
+      <PropertyRef Name="StockId" />
+    </Key>
+    <Property Name="StockId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MaterialId" Type="Int32" Nullable="false" />
+    <Property Name="TypeId" Type="Int32" Nullable="false" />
+    <Property Name="ItemId" Type="Int32" Nullable="false" />
+    <Property Name="AvailableQuantity" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_Master_Company">
+    <Key>
+      <PropertyRef Name="CompanyId" />
+    </Key>
+    <Property Name="CompanyId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_Master_Material">
+    <Key>
+      <PropertyRef Name="MaterialId" />
+    </Key>
+    <Property Name="MaterialId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MaterialName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_Master_Type">
+    <Key>
+      <PropertyRef Name="TypeId" />
+    </Key>
+    <Property Name="TypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MaterialId" Type="Int32" Nullable="false" />
+    <Property Name="TypeName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="VRM_Master_Type1" Relationship="Self.FK_Master_Type_Master_Type" FromRole="VRM_Master_Type" ToRole="VRM_Master_Type1" />
+    <NavigationProperty Name="VRM_Master_Type2" Relationship="Self.FK_Master_Type_Master_Type" FromRole="VRM_Master_Type1" ToRole="VRM_Master_Type" />
+  </EntityType>
+  <Association Name="FK_Master_Type_Master_Type">
+    <End Role="VRM_Master_Type" Type="Self.VRM_Master_Type" Multiplicity="1" />
+    <End Role="VRM_Master_Type1" Type="Self.VRM_Master_Type" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="VRM_Master_Type">
+        <PropertyRef Name="TypeId" />
+      </Principal>
+      <Dependent Role="VRM_Master_Type1">
+        <PropertyRef Name="TypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="VRMStackMaintenanceEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="VRM_Attachment" EntityType="Self.VRM_Attachment" />
+    <EntitySet Name="VRM_ErrorLog" EntityType="Self.VRM_ErrorLog" />
+    <EntitySet Name="VRM_InwardStock" EntityType="Self.VRM_InwardStock" />
+    <EntitySet Name="VRM_Master_Company" EntityType="Self.VRM_Master_Company" />
+    <EntitySet Name="VRM_Master_Material" EntityType="Self.VRM_Master_Material" />
+    <EntitySet Name="VRM_Master_Type" EntityType="Self.VRM_Master_Type" />
+    <AssociationSet Name="FK_Master_Type_Master_Type" Association="Self.FK_Master_Type_Master_Type">
+      <End Role="VRM_Master_Type" EntitySet="VRM_Master_Type" />
+      <End Role="VRM_Master_Type1" EntitySet="VRM_Master_Type" />
+    </AssociationSet>
+    <EntitySet Name="VRM_Role" EntityType="VRMStackMaintenanceModel.VRM_Role" />
+    <EntitySet Name="VRM_OutwardStock" EntityType="VRMStackMaintenanceModel.VRM_OutwardStock" />
+    <EntitySet Name="VRM_OutwardStockTransaction" EntityType="VRMStackMaintenanceModel.VRM_OutwardStockTransaction" />
+    <EntitySet Name="VRM_Master_Item" EntityType="VRMStackMaintenanceModel.VRM_Master_Item" />
+    <EntitySet Name="VRM_InwardStockTransaction" EntityType="VRMStackMaintenanceModel.VRM_InwardStockTransaction" />
+    <EntitySet Name="VRM_UserDetail" EntityType="VRMStackMaintenanceModel.VRM_UserDetail" />
+  </EntityContainer>
+  <EntityType Name="VRM_Role">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_OutwardStock">
+    <Key>
+      <PropertyRef Name="OutwardId" />
+    </Key>
+    <Property Name="OutwardId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InvoiceNumber" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="OutwardDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="CustomerInformation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="VRM_OutwardStockTransaction">
+    <Key>
+      <PropertyRef Name="OutwardStackDetailId" />
+    </Key>
+    <Property Name="OutwardStackDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OutwardId" Type="Int32" Nullable="false" />
+    <Property Name="StockId" Type="Int32" Nullable="false" />
+    <Property Name="OutwardQuantity" Type="Int32" Nullable="false" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="VRM_Master_Item">
+    <Key>
+      <PropertyRef Name="ItemId" />
+    </Key>
+    <Property Name="ItemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MaterialId" Type="Int32" Nullable="false" />
+    <Property Name="TypeId" Type="Int32" Nullable="false" />
+    <Property Name="ItemName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="MinimumAvailableQuantity" Type="Int32" />
+  </EntityType>
+  <EntityType Name="VRM_InwardStockTransaction">
+    <Key>
+      <PropertyRef Name="InwardStockTransactionId" />
+    </Key>
+    <Property Name="InwardStockTransactionId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StockId" Type="Int32" Nullable="false" />
+    <Property Name="AddQuantity" Type="Int32" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PONumber" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="ReceivedFrom" Type="Int32" Nullable="false" />
+    <Property Name="ReceivedBy" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="ReceivedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="GRNnumber" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="VRM_UserDetail">
+    <Key>
+      <PropertyRef Name="UserDetailId" />
+    </Key>
+    <Property Name="UserDetailId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Role" Type="Int32" Nullable="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="ProfileImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

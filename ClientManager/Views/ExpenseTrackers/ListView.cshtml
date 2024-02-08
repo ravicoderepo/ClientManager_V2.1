@@ -1,0 +1,490 @@
+﻿@model IEnumerable<DBOperation.ExpenseTracker>
+@using DBOperation;
+@using System.Linq;
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+    ClientManagerEntities db = new ClientManagerEntities();
+}
+<style>
+    table tr td:first-child {
+        white-space: nowrap;
+    }
+
+    table thead tr th {
+        white-space: nowrap;
+    }
+
+    table thead tr td {
+        white-space: nowrap !important;
+        font-size: 8px !important;
+    }
+
+    table.table-bordered.dataTable th, table.table-bordered.dataTable td {
+        white-space: nowrap !important;
+    }
+
+    body {
+        font-size: 13px !important;
+    }
+
+    .dataTables_filter {
+        display: none !important;
+    }
+
+    .cashTableHeader {
+        width: 200px;
+    }
+
+    .cashTableAmounCol {
+        width: 80px;
+    }
+
+    td > i {
+        padding-left: 10px;
+    }
+</style>
+<div class="row" id="pettyCashSummary">
+    <div class="col-12 col-sm-6"><span style="font-weight:bold; font-size:15px"> PettyCash Summary </span> </div>
+    <div class="col-12 col-sm-6"><span style="font-weight:bold; font-size:15px"></span> </div>
+    <div class="col-12 col-sm-6">
+        <table>
+            <tr>
+                <td class="cashTableHeader">Total PettyCash  </td>
+                <td>:</td>
+                <td style="text-align:right; color:blue; font-weight:bold"> <a href="/PettyCashes/List"> &#8377;@ViewBag.TotalPettyCash </a>  </td>
+                <td>[Click to PettyCash Details]</td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Petty Cash Recived"></i> </td>
+            </tr>
+            <tr>
+                <td class="cashTableHeader">Available PettyCash</td>
+                <td>:</td>
+                <td style="text-align: right; color: green; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.AvailablePettyCash</td>
+                <td></td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Petty Cash - Total Expense"></i> </td>
+                @*[Total PettyCash - Total Approved & Verified]*@
+            </tr>
+            <tr>
+                <td class="cashTableHeader">Pending PettyCash</td>
+                <td>:</td>
+                <td style="text-align: right; color: red !important; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.PendingPettyCash</td>
+                <td></td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Petty Cash - (Total UnApproved Expense + Total UnVerified Expense)"></i> </td>
+                @*[Total PettyCash - Total Approved & Verified]*@
+            </tr>
+            <tr>
+                <td class="cashTableHeader">Expense To Approve   </td>
+                <td>:</td>
+                <td style="text-align: right; color: orange !important; font-weight: bold " class="cashTableAmounCol"><a style="color: orange !important;" href="javascript:FilterPettyCash('Pending')"> &#8377;@ViewBag.TotalUnApprovedExpence </a></td>
+                <td></td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total UnApproved Expense"></i> </td>
+            </tr>
+            <tr>
+                <td class="cashTableHeader">Expense To Verify   </td>
+                <td>:</td>
+                <td style="text-align: right; color: orange !important; font-weight: bold" class="cashTableAmounCol"><a style="color: orange !important;" href="javascript:FilterPettyCash('Approved')">&#8377;@ViewBag.TotalUnVerifiedExpence</a></td>
+                <td></td>
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total UnVerified Expense, but Apporved"></i> </td>
+            </tr>
+            <tr>
+                <td class="cashTableHeader"><a href="javascript:FilterPettyCash('')">Clear all filter</a>   </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            @*<tr>
+                    <td class="cashTableHeader">Total Expense (Verified)   </td>
+                    <td>:</td>
+                    <td style="text-align: right; color: darkred; font-weight: bold" class="cashTableAmounCol">&#8377;@ViewBag.TotalApprovedExpence</td>
+                    <td></td>
+                </tr>*@
+
+        </table>
+    </div>
+    <div class="col-12 col-sm-6">
+        <table>
+            <tr>
+                <td class="cashTableHeader" style=" text-align: center; font-size: 25px; color: green; font-weight: bold">Total Expense <br /><span style=" text-align: center; font-size: 10px; color: green; font-weight: bold">(Based on User and Filter Conditions)</span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td style="text-align: center; font-size: 25px; color: blue; font-weight: bold"> &#8377;@ViewBag.TotalFilteredExpense
+                <td><i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Total Expense"></i></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<br />
+<div id="gridView">
+    <table id="example1" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Action</th>
+                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User") || currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager"))
+                {
+                    <th>Select</th>
+                }
+                <th>
+                    Expense Amount
+                </th>
+                <th>
+                    Expense Date
+                </th>
+                <th>
+                    Expense Entered On
+                </th>
+                <th>
+                    Expense Category
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Description
+                </th>
+
+                @*    <th>
+                        Created By
+                    </th>
+                    <th>
+                        Modified On
+                    </th>
+                    <th>
+                        Modified By
+                    </th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @*@if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                            {*@
+                        <button type="button" class="btn btn-primary btn-xs" title="Edit" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="far fa-edit"></i></button>
+
+                        @if (db.Documents.Any(wh => wh.ReferenceRecId == item.Id))
+                        {
+                            <button type="button" class="btn btn-info btn-xs" title="View Documents" onclick="fnViewDocuments(@item.Id)"><i class="far fa-eye"></i></button>
+                        }
+                        @*}*@
+                        @*else
+                            {
+                                <button type="button" class="btn btn-primary btn-xs" title="View" onclick="javascript:location.href='/ExpenseTrackers/Edit/@item.Id'"><i class="fas fa-eye"></i></button>
+                            }*@
+
+                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Approver") && item.Status == "Pending")
+                        {
+                            <button type="button" class="btn btn-success btn-xs" title="Approve" onclick="fnApprove(@item.Id,'Approved')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                            @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
+                            @*<button type="button" class="btn btn-outline-secondary btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-up"></i></button>*@
+                        }
+
+                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Verifier") && item.Status == "Approved")
+                        {
+                            <button type="button" class="btn btn-success btn-xs" title="Verify" onclick="fnVerify(@item.Id,'Verified')"><i class="far fa-arrow-alt-circle-right"></i></button>
+                        }
+
+                        @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin") && item.Status == "Pending")
+                        {
+
+                            <button type="button" class="btn btn-danger btn-xs" title="Delete" onclick="fnDelete(@item.Id)"><i class="far fa-trash-alt"></i></button>
+
+                        }
+
+                    </td>
+                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Super User"))
+                    {
+                        <td>
+
+                            @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status == "Pending")
+                            {
+                                <input type="checkbox" id="@item.Id" />
+                            }
+
+                        </td>
+                    }
+                    @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager"))
+                    {
+                        <td>
+
+                            @if (!db.Documents.Any(wh => wh.ReferenceRecId == item.Id) && item.Status == "Approved")
+                            {
+                                <input type="checkbox" id="@item.Id" />
+                            }
+
+                        </td>
+                    }
+                    <td style="text-align:right">
+                        @*@Html.DisplayFor(modelItem => item.ExpenseAmount.ToString("#,##,##0.00"))*@
+                        @item.ExpenseAmount.ToString("#,##,##0.00")
+                    </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@
+                        @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ExpenseDate))*@
+                        @item.ExpenseDate
+                    </td>
+                    <td>
+                        @*@Html.DisplayFor(modelItem => item.ExpenseDate)*@
+                        @*@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))*@
+                        @*@item.ExpenseDate*@
+                        @item.CreatedOn
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExpenceCategory.CategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <!--<td>-->
+                    @*@Html.DisplayFor(modelItem => item.CreatedOn)*@
+                    <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.CreatedOn))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.FullName)
+                    </td>
+                    <td>-->
+                    @*@Html.DisplayFor(modelItem => item.ModifiedOn)*@
+                    <!--@Convert.ToString(string.Format("{0:dd/MM/yyyy}", item.ModifiedOn))
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User1.FullName)
+                    </td>-->
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@*<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script src="http://cdn.datatables.net/plug-ins/1.10.25/sorting/datetime-moment.js"></script>*@
+<script>
+    $(function () {
+
+        var sortCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False' && '@currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager")' == 'False') ? 4 : 5;
+        //var sortDateCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False') ? 2 : 3;
+         var sortAttachCol = ('@currentUser.UserRoles.Any(wh => wh.RoleName == "Super User")' == 'False' && '@currentUser.UserRoles.Any(wh => wh.RoleName == "Accounts Manager")' == 'False') ? 0 : 1;
+        $("#example1").DataTable({
+            "responsive": true, "lengthChange": false, "autoWidth": false, "lengthChange": true, 
+            "order": [[sortCol, 'desc'], [0, 'asc']],
+            "columnDefs": [{ "type": "date", "targets": [4, 5] }],
+            "buttons": ["excel", "pdf", "print", "colvis"],
+        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        //$('#example2').DataTable({
+        //    "paging": true,
+        //    "lengthChange": false,
+        //    "searching": false,
+        //    "ordering": true,
+        //    "info": true,
+        //    "autoWidth": false,
+        //    "responsive": true,
+        //});
+    });
+    $(document).ready(function () {
+       // $.fn.dataTable.moment('DD/MM/YYYY');
+
+        $('#example1').DataTable();
+    });
+    function fnDelete(id) {
+
+        if (confirm("do you want to delete?")) {
+            $.ajax({
+                type: "GET",
+                url: "/ExpenseTrackers/Delete?id=" + id,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        fnSearch();
+                        //window.location.href = data.redirectURL;
+                    }
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
+
+    function fnApprove(id, status) {
+
+        if (confirm("do you want to approve this record ?")) {
+            $.ajax({
+                type: "GET",
+                url: "/ExpenseTrackers/ExpenceEntryApproval?id=" + id + "&status=" + status,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        fnSearch();
+                        //window.location.href = data.redirectURL;
+                    }
+                    //else {
+                    //    alert(data.message);
+                    //}
+
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
+    function fnApprove(id, status) {
+
+        if (confirm("do you want to approve this record ?")) {
+            $.ajax({
+                type: "GET",
+                url: "/ExpenseTrackers/ExpenceEntryApproval?id=" + id + "&status=" + status,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        fnSearch();
+                        //window.location.href = data.redirectURL;
+                    }
+                    //else {
+                    //    alert(data.message);
+                    //}
+
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
+                }
+            });
+        }
+        else {
+            return false;
+        }
+    }
+    function fnBulkApprove() {
+
+        if ($('#example1 input:checkbox:checked').length > 0) {
+
+            var id = [];
+            $('#example1 input[type=checkbox]:checked').each(function () {
+                id.push($(this).attr('id'));
+            });
+
+            var inputData = { 'id': id, 'status': 'Approved' };
+            if (confirm("do you want to bulk approve selected records?")) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/ExpenseTrackers/ExpenceEntryApproval",
+                    data: JSON.stringify(inputData),
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.status == "Success") {
+                            alert(data.message);
+                            fnSearch();
+                            //window.location.href = data.redirectURL;
+                        }
+                        //else {
+                        //    alert(data.message);
+                        //}
+
+                    },
+                    error: function () {
+                        alert("Error occured!!  " + data.message)
+                    }
+                });
+            }
+        }
+        else {
+            alert("select any item to Approve");
+        }
+    }
+    function fnBulkVerify() {
+
+        if ($('#example1 input:checkbox:checked').length > 0) {
+
+            var id = [];
+            $('#example1 input[type=checkbox]:checked').each(function () {
+                id.push($(this).attr('id'));
+            });
+
+            var inputData = { 'id': id, 'status': 'Verified' };
+
+            if (confirm("do you want to bulk verify selected records?")) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/ExpenseTrackers/ExpenceEntryVerify",
+                    data: JSON.stringify(inputData),
+                    dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (data) {
+                        if (data.status == "Success") {
+                            alert(data.message);
+                            fnSearch();
+                            //window.location.href = data.redirectURL;
+                        }
+                        //else {
+                        //    alert(data.message);
+                        //}
+
+                    },
+                    error: function () {
+                        alert("Error occured!!  " + data.message)
+                    }
+                });
+            }
+        }
+        else {
+            alert("select any item to Approve");
+        }
+    }
+    function fnVerify(id, status) {
+
+        if (confirm("do you want to verify this record ?")) {
+            $.ajax({
+                type: "GET",
+                url: "/ExpenseTrackers/ExpenceEntryVerify?id=" + id + "&status=" + status,
+                //data: JSON.stringify(Register),
+                dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    if (data.status == "Success") {
+                        alert(data.message);
+                        fnSearch();
+                        //window.location.href = data.redirectURL;
+                    }
+                    //else {
+                    //    alert(data.message);
+                    //}
+
+                },
+                error: function () {
+                    alert("Error occured!!  " + data.message)
+                }
+            });
+        }
+    }
+    $("#mnuExpenceTracker").addClass("active");
+    var parentMenu = $("#mnuExpenceTracker").parent().parent().parent();
+
+    parentMenu.attr("class", "nav-item menu-is-opening menu-open");
+    parentMenu.find("ul").each(function () {
+
+        $(this).attr("style", "display:block");
+    });
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>

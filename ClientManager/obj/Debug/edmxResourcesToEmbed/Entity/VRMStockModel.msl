@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="VRMStackMaintenanceModelStoreContainer" CdmEntityContainer="VRMStackMaintenanceEntities">
+    <EntitySetMapping Name="VRM_Attachment">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_Attachment">
+        <MappingFragment StoreEntitySet="VRM_Attachment">
+          <ScalarProperty Name="AttachmentId" ColumnName="AttachmentId" />
+          <ScalarProperty Name="OutwardId" ColumnName="OutwardId" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="FileContentType" ColumnName="FileContentType" />
+          <ScalarProperty Name="FileContent" ColumnName="FileContent" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_ErrorLog">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_ErrorLog">
+        <MappingFragment StoreEntitySet="VRM_ErrorLog">
+          <ScalarProperty Name="ErrorLogId" ColumnName="ErrorLogId" />
+          <ScalarProperty Name="Subject" ColumnName="Subject" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="IPAddress" ColumnName="IPAddress" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_InwardStock">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_InwardStock">
+        <MappingFragment StoreEntitySet="VRM_InwardStock">
+          <ScalarProperty Name="StockId" ColumnName="StockId" />
+          <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+          <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+          <ScalarProperty Name="AvailableQuantity" ColumnName="AvailableQuantity" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_Master_Company">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_Master_Company">
+        <MappingFragment StoreEntitySet="VRM_Master_Company">
+          <ScalarProperty Name="CompanyId" ColumnName="CompanyId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_Master_Material">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_Master_Material">
+        <MappingFragment StoreEntitySet="VRM_Master_Material">
+          <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+          <ScalarProperty Name="MaterialName" ColumnName="MaterialName" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_Master_Type">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_Master_Type">
+        <MappingFragment StoreEntitySet="VRM_Master_Type">
+          <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+          <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+          <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_Role">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_Role">
+        <MappingFragment StoreEntitySet="VRM_Role">
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_OutwardStock">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_OutwardStock">
+        <MappingFragment StoreEntitySet="VRM_OutwardStock">
+          <ScalarProperty Name="CustomerInformation" ColumnName="CustomerInformation" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="OutwardDate" ColumnName="OutwardDate" />
+          <ScalarProperty Name="InvoiceNumber" ColumnName="InvoiceNumber" />
+          <ScalarProperty Name="OutwardId" ColumnName="OutwardId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_OutwardStockTransaction">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_OutwardStockTransaction">
+        <MappingFragment StoreEntitySet="VRM_OutwardStockTransaction">
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="OutwardQuantity" ColumnName="OutwardQuantity" />
+          <ScalarProperty Name="StockId" ColumnName="StockId" />
+          <ScalarProperty Name="OutwardId" ColumnName="OutwardId" />
+          <ScalarProperty Name="OutwardStackDetailId" ColumnName="OutwardStackDetailId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_Master_Item">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_Master_Item">
+        <MappingFragment StoreEntitySet="VRM_Master_Item">
+          <ScalarProperty Name="MinimumAvailableQuantity" ColumnName="MinimumAvailableQuantity" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+          <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+          <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+          <ScalarProperty Name="ItemId" ColumnName="ItemId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_InwardStockTransaction">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_InwardStockTransaction">
+        <MappingFragment StoreEntitySet="VRM_InwardStockTransaction">
+          <ScalarProperty Name="GRNnumber" ColumnName="GRNnumber" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="ReceivedDate" ColumnName="ReceivedDate" />
+          <ScalarProperty Name="ReceivedBy" ColumnName="ReceivedBy" />
+          <ScalarProperty Name="ReceivedFrom" ColumnName="ReceivedFrom" />
+          <ScalarProperty Name="PONumber" ColumnName="PONumber" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="AddQuantity" ColumnName="AddQuantity" />
+          <ScalarProperty Name="StockId" ColumnName="StockId" />
+          <ScalarProperty Name="InwardStockTransactionId" ColumnName="InwardStockTransactionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="VRM_UserDetail">
+      <EntityTypeMapping TypeName="VRMStackMaintenanceModel.VRM_UserDetail">
+        <MappingFragment StoreEntitySet="VRM_UserDetail">
+          <ScalarProperty Name="ProfileImage" ColumnName="ProfileImage" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="UserDetailId" ColumnName="UserDetailId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

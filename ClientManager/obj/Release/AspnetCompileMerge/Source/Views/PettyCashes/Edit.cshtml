@@ -1,0 +1,249 @@
+﻿@model DBOperation.PettyCash
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var currentUser = (ClientManager.Models.UserDetails)Session["UserDetails"];
+}
+
+<style>
+    textarea {
+        width: 100% !important;
+        border: 1px solid #ced4da !important;
+        border-radius: .25rem !important;
+        padding: .375rem .75rem !important;
+    }
+</style>
+<div class="content-wrapper">
+
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Petty Cash</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Accounts</a></li>
+                        <li class="breadcrumb-item"><a href="#">Petty Cash</a></li>
+                        <li class="breadcrumb-item active">Edit</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- left column -->
+                <div class="col-md-12">
+                    <!-- jquery validation -->
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Petty Cash</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form id="quickForm">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="AmountReceived">Amount Received</label>
+                                            @Html.EditorFor(model => model.AmountReceived, new { htmlAttributes = new { @class = "form-control allow_decimal", @id = "txtAmountReceived", @name = "AmountReceived", @style = "text-align:right !important" } })
+                                        </div>
+                                    </div><div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="AmountRecivedDate">Amount Recived Date</label>
+                                            <div class="input-group date" data-target-input="nearest">
+                                                @Html.EditorFor(model => model.AmountRecivedDate, new { htmlAttributes = new { @class = "form-control datetimepicker-input", @id = "txtAmountRecivedDate", @name = "AmountRecivedDate" } })
+                                                <div class="input-group-append" data-target="#txtAmountRecivedDate" data-toggle="datetimepicker">
+                                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="status">Mode of Payment</label>
+                                            @Html.HiddenFor(model => model.Id, new { htmlAttributes = new { @id = "Id" } })
+                                            @Html.HiddenFor(model => model.ModeOfPayment, new { htmlAttributes = new { @id = "hdnModeOfPayment" } })
+                                            @Html.DropDownList("ModeOfPayment", null, htmlAttributes: new { @class = "form-control select2", @id = "ddlModeOfPayment", @onChange = "fnModeOfPaymentChange()" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Description">Description</label>
+                                            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @id = "txtDescription", @name = "Description" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                            <div class="card-footer">
+                                @if (currentUser.UserRoles.Any(wh => wh.RoleName == "Store Admin"))
+                                {
+                                    <button type="submit" class="btn btn-primary">Submit</button> <button type="button" class="btn btn-danger">Cancel</button>
+                                }
+                                <button type="button" class="btn btn-outline-secondary" onclick="javascript:location.href='../List'" id="btnBack">Back to List</button>
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+
+                <!--/.col (left) -->
+                <!-- right column -->
+                <div class="col-md-6">
+
+                </div>
+                <!--/.col (right) -->
+            </div>
+            <!-- /.row -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+
+<script>
+    $(".btn-danger").click(function () {
+        debugger;
+        window.location.href = window.location.href;
+    });
+    $(window).on('load', function () {
+
+        if ('@ViewBag.AccessLevel' == "View") {
+            $('#quickForm :input').each(function () {
+                debugger;
+                if ($(this).attr('Id') != 'btnBack') {
+                    debugger;
+                    $(this).prop('disabled', true);
+                }
+            });
+        }
+    });
+
+    //Date picker
+    $('#txtAmountRecivedDate').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+
+    $(function () {
+        //debugger;
+        $.validator.setDefaults({
+            submitHandler: function () {
+                debugger;
+                // alert("Form successful submitted!");
+                fnSubmitPettyCashDetails();
+            }
+        });
+        $('#quickForm').validate({
+
+            rules: {
+                saleDate: {
+                    required: true,
+                },
+                clientName: {
+                    required: true,
+                },
+            },
+            messages: {
+                saleDate: {
+                    required: "Please enter a email address",
+                },
+                clientName: {
+                    required: "Please provide a password",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
+    $(".allow_numeric").on("input", function (evt) {
+        var self = $(this);
+        self.val(self.val().replace(/\D/g, ""));
+        if ((evt.which < 48 || evt.which > 57)) {
+            evt.preventDefault();
+        }
+    });
+    //$(".allow_decimal").on("input", function (evt) {
+    //    var self = $(this);
+    //    self.val(self.val().replace(/[^0-9\.]/g, ''));
+    //    if ((evt.which != 46 || self.val().indexOf('.') != -1) && (evt.which < 48 || evt.which > 57)) {
+    //        evt.preventDefault();
+    //    }
+    //});
+    $('.allow_decimal').keypress(function (event) {
+        if (((event.which != 46 || (event.which == 46 && $(this).val() == '')) ||
+            $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    }).on('paste', function (event) {
+        event.preventDefault();
+    });
+    function fnModeOfPaymentChange() {
+        debugger;
+        $("input[name=ModeOfPayment]").val($('#ddlModeOfPayment').val());
+    }
+
+    function fnSubmitPettyCashDetails() {
+
+        //if (Date.parse($('#txtAmountRecivedDate').val()) > Date.parse(Date.now)) {
+        //    alert("Amount recived date should be lesser than or equal to today.");
+        //    return false;
+        //}
+
+        debugger;
+        var PettyCashData = {
+            Id: $('#Id').val(),
+            ModeOfPayment: $("input[name=ModeOfPayment]").val(),
+            AmountReceived: $('#txtAmountReceived').val(),
+            AmountRecivedDate: $('#txtAmountRecivedDate').val(),
+            Description: $('#txtDescription').val()
+        };
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "/PettyCashes/Edit",
+            data: JSON.stringify(PettyCashData),
+            dataType: "json",
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                if (data.status == "Success") {
+                    alert(data.message);
+                    window.location.href = data.redirectURL;
+                }
+                else {
+                    alert(data.message);
+                }
+            },
+            error: function () {
+                alert("Error occured!!  " + data.message)
+            }
+        });
+    }
+    $("#mnuPettyCash").addClass("active");
+</script>
